@@ -1,0 +1,455 @@
+/* ==========================================================================
+   Microsoft 365 1-to-1 Suite Theme & High-Gloss Lacquer Integration
+   ========================================================================== */
+
+:root {
+  /* Official Microsoft 365 Application Palette */
+  --m365-word: #185abd;
+  --m365-word-dark: #103f84;
+  --m365-excel: #107c41;
+  --m365-excel-dark: #0b552c;
+  --m365-powerpoint: #c43e1c;
+  --m365-powerpoint-dark: #8c2a11;
+  --m365-outlook: #0078d4;
+  --m365-outlook-dark: #005a9e;
+  --m365-teams: #6264a7;
+  --m365-teams-dark: #464775;
+  --m365-onedrive: #0078d4;
+  --m365-copilot-start: #0078d4;
+  --m365-copilot-end: #8764b8;
+
+  /* Shell Background & Borders */
+  --m365-topbar-bg: #0b111e;
+  --m365-rail-bg: #080d17;
+  --m365-workspace-bg: #050b18;
+  --m365-card-bg: #0e1d3a;
+  --m365-border: rgba(197, 160, 89, 0.22);
+  --m365-text-light: #f3f6fc;
+  --m365-text-muted: #8c9cb8;
+}
+
+body.m365-app-root {
+  background-color: var(--m365-workspace-bg);
+  color: var(--m365-text-light);
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Top Navigation Bar */
+.m365-topbar {
+  height: 48px;
+  background-color: var(--m365-topbar-bg);
+  border-bottom: 1px solid var(--m365-border);
+  z-index: 1050;
+  flex-shrink: 0;
+}
+
+.m365-waffle-btn {
+  color: #fff;
+  border: none;
+  background: transparent;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.m365-waffle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.m365-search-group {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.m365-search-group:focus-within {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--m365-outlook);
+  box-shadow: 0 0 10px rgba(0, 120, 212, 0.3);
+}
+.m365-search-input {
+  font-size: 0.88rem;
+  box-shadow: none !important;
+}
+
+.m365-copilot-pill {
+  background: linear-gradient(135deg, rgba(0, 120, 212, 0.25), rgba(135, 100, 184, 0.25));
+  border: 1px solid rgba(135, 100, 184, 0.4);
+  color: #fff;
+}
+.m365-copilot-pill:hover {
+  background: linear-gradient(135deg, rgba(0, 120, 212, 0.45), rgba(135, 100, 184, 0.45));
+  color: #fff;
+}
+
+.m365-mode-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--m365-border);
+  color: #c5d3ea;
+}
+.m365-mode-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.m365-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #107c41, #0078d4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Waffle App Launcher Flyout */
+.m365-waffle-flyout {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  width: 320px;
+  background: rgba(14, 29, 58, 0.96) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(197, 160, 89, 0.3) !important;
+  border-radius: 12px;
+  z-index: 1060;
+}
+.waffle-app-item {
+  transition: all 0.15s;
+}
+.waffle-app-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+.app-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.app-icon-box.sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+.bg-word { background-color: var(--m365-word); }
+.bg-excel { background-color: var(--m365-excel); }
+.bg-powerpoint { background-color: var(--m365-powerpoint); }
+.bg-outlook { background-color: var(--m365-outlook); }
+.bg-teams { background-color: var(--m365-teams); }
+.bg-onedrive { background-color: var(--m365-onedrive); }
+.bg-copilot { background: linear-gradient(135deg, var(--m365-copilot-start), var(--m365-copilot-end)); }
+
+/* Left Navigation Rail */
+.m365-workspace {
+  flex-grow: 1;
+  overflow: hidden;
+}
+.m365-left-rail {
+  width: 54px;
+  background-color: var(--m365-rail-bg);
+  border-right: 1px solid var(--m365-border);
+  flex-shrink: 0;
+  gap: 6px;
+}
+.rail-item {
+  width: 44px;
+  height: 48px;
+  border: none;
+  background: transparent;
+  color: var(--m365-text-muted);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  cursor: pointer;
+  padding: 0;
+}
+.rail-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.rail-item.active {
+  background: rgba(0, 120, 212, 0.16);
+  color: #fff;
+  border-left: 3px solid var(--m365-outlook);
+}
+.rail-app-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.85rem;
+}
+.rail-label {
+  font-size: 0.65rem;
+  margin-top: 2px;
+  line-height: 1;
+}
+
+/* App Views Container */
+.app-view {
+  display: none !important;
+  height: 100%;
+}
+.app-view.active {
+  display: flex !important;
+}
+
+/* Office Ribbon Bar & Headers */
+.m365-office-header {
+  background: rgba(14, 29, 58, 0.8);
+  border-color: var(--m365-border) !important;
+  flex-shrink: 0;
+}
+.m365-ribbon {
+  background: rgba(11, 22, 44, 0.95);
+  border-color: var(--m365-border) !important;
+  flex-shrink: 0;
+}
+.ribbon-tabs .nav-link {
+  color: var(--m365-text-muted);
+  font-size: 0.82rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 4px 12px;
+}
+.ribbon-tabs .nav-link:hover {
+  color: #fff;
+}
+.ribbon-tabs .nav-link.active {
+  color: #fff;
+  background: transparent;
+  border-bottom: 2px solid var(--m365-outlook);
+  font-weight: 600;
+}
+.ribbon-toolbar button {
+  font-size: 0.82rem;
+}
+.m365-office-statusbar {
+  background: rgba(8, 13, 23, 0.95);
+  border-color: var(--m365-border) !important;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+/* Word Document Page */
+.m365-document-stage {
+  background: #020610;
+}
+.word-page-sheet {
+  width: 816px;
+  min-height: 1056px;
+  background: #ffffff;
+  color: #24292f;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  margin-bottom: 40px;
+}
+.word-page-sheet:focus {
+  box-shadow: 0 10px 40px rgba(0, 120, 212, 0.35);
+}
+
+/* Excel Interactive Grid */
+.excel-grid-container {
+  background: #0a0f1d;
+}
+.excel-table {
+  border-collapse: collapse;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+.excel-table th {
+  background: #111a2e !important;
+  color: #8c9cb8 !important;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 4px 8px;
+  user-select: none;
+}
+.excel-corner-cell {
+  width: 44px;
+}
+.excel-cell-row-header {
+  background: #111a2e !important;
+  color: #8c9cb8 !important;
+  font-weight: 600;
+  text-align: center;
+  user-select: none;
+}
+.excel-data-cell {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 4px 8px;
+  outline: none;
+  min-width: 110px;
+}
+.excel-data-cell:focus, .excel-data-cell.selected {
+  outline: 2px solid var(--m365-excel) !important;
+  background: rgba(16, 124, 65, 0.15) !important;
+}
+
+/* PowerPoint Stage */
+.ppt-thumbnail-pane {
+  width: 180px;
+  background: #090e1a;
+  flex-shrink: 0;
+}
+.ppt-thumb-card {
+  height: 90px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: #121c32;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ppt-thumb-card:hover {
+  border-color: rgba(196, 62, 28, 0.6);
+}
+.ppt-thumb-card.active {
+  border-color: var(--m365-powerpoint);
+  box-shadow: 0 0 12px rgba(196, 62, 28, 0.4);
+}
+.ppt-slide-canvas {
+  width: 780px;
+  height: 440px;
+  background: linear-gradient(135deg, #0e1d3a, #050b18);
+  border: 1px solid rgba(197, 160, 89, 0.3);
+}
+.ppt-fullscreen-viewer {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Outlook 3-Pane Styles */
+.outlook-folder-item {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--m365-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.outlook-folder-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+.outlook-folder-item.active {
+  background: rgba(0, 120, 212, 0.18);
+  color: #fff;
+  font-weight: 600;
+}
+.outlook-msg-card {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 29, 58, 0.5);
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.15s;
+}
+.outlook-msg-card:hover {
+  border-color: rgba(0, 120, 212, 0.4);
+  background: rgba(14, 29, 58, 0.85);
+}
+.outlook-msg-card.selected {
+  border-color: var(--m365-outlook);
+  background: rgba(0, 120, 212, 0.18);
+}
+.unread-indicator-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--m365-outlook);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Teams Styling */
+.teams-channel-item {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--m365-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.teams-channel-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+.teams-channel-item.active {
+  background: rgba(98, 100, 167, 0.22);
+  color: #fff;
+  font-weight: 600;
+}
+.teams-msg-bubble {
+  background: rgba(14, 29, 58, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+/* Chat & Trace */
+.chat-box {
+  height: 480px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.trace-panel {
+  max-height: 560px;
+}
+.trace-step-card {
+  background: rgba(14, 29, 58, 0.9);
+  border: 1px solid var(--m365-border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+pre.trace-json {
+  background: #040812;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 0.76rem;
+  color: #79c0ff;
+  max-height: 120px;
+  overflow-y: auto;
+}
