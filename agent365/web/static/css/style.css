@@ -453,3 +453,84 @@ pre.trace-json {
   max-height: 120px;
   overflow-y: auto;
 }
+
+/* Fresh Out-of-the-Box Empty States & Windows 11 UI Tokens */
+.m365-autosave-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  user-select: none;
+}
+.m365-autosave-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #107c41;
+  box-shadow: 0 0 6px rgba(16, 124, 65, 0.8);
+  display: inline-block;
+}
+
+.m365-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+  color: #8c9cb8;
+}
+.m365-empty-icon {
+  font-size: 3.2rem;
+  opacity: 0.35;
+  margin-bottom: 16px;
+}
+
+/* Word Fresh Page Placeholder */
+.word-page-sheet[data-empty="true"]::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  font-style: italic;
+  pointer-events: none;
+}
+
+/* PowerPoint Title Slide Dashed Placeholder Bounding Boxes */
+.ppt-title-placeholder-box {
+  border: 2px dashed rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: text;
+}
+.ppt-title-placeholder-box:hover, .ppt-title-placeholder-box:focus-within {
+  border-color: rgba(196, 62, 28, 0.7);
+  background: rgba(196, 62, 28, 0.06);
+}
+.ppt-subtitle-placeholder-box {
+  border: 2px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  padding: 18px;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: text;
+}
+.ppt-subtitle-placeholder-box:hover, .ppt-subtitle-placeholder-box:focus-within {
+  border-color: rgba(196, 62, 28, 0.5);
+  background: rgba(196, 62, 28, 0.04);
+}
+
+/* OneNote Note Canvas Empty State */
+.onenote-page-editor:empty::before {
+  content: "Type notes here, or press Tab to create a table...";
+  color: #64748b;
+  font-style: italic;
+  pointer-events: none;
+}
+

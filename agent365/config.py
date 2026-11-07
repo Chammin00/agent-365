@@ -21,6 +21,9 @@ class Settings(BaseModel):
     m365_mode: Literal["mock", "live"] = Field(
         default_factory=lambda: os.getenv("M365_MODE", "mock").lower() # type: ignore
     )
+    fresh_out_of_box: bool = Field(
+        default_factory=lambda: os.getenv("FRESH_OUT_OF_BOX", "true").lower() in ("true", "1", "yes")
+    )
 
     # Entra ID / Microsoft Graph Credentials
     azure_tenant_id: Optional[str] = Field(default_factory=lambda: os.getenv("AZURE_TENANT_ID"))

@@ -35,10 +35,90 @@ from ..models import (
 
 
 class MockM365Client(M365ClientBase):
-    """In-memory simulated M365 tenant with pre-seeded enterprise datasets."""
+    """In-memory simulated M365 tenant with fresh out-of-the-box state and optional demo seed."""
 
-    def __init__(self):
+    def __init__(self, fresh: bool = False):
+        self.fresh = fresh
         now = datetime.now()
+        if fresh:
+            self.init_fresh_state(now)
+        else:
+            self.seed_demo_dataset(now)
+
+    def init_fresh_state(self, now: Optional[datetime] = None):
+        """Initializes a pristine, fresh out-of-the-box tenant with zero pre-written example text."""
+        if now is None:
+            now = datetime.now()
+        self.emails: List[EmailMessage] = []
+        self.events: List[CalendarEvent] = []
+        self.files: List[DriveItem] = []
+        self.channels: List[TeamsChannel] = [
+            TeamsChannel(id="chan-401", team_name="Enterprise 365", channel_name="General", description="General discussions and updates")
+        ]
+        self.messages: List[TeamsMessage] = []
+        self.spreadsheets: Dict[str, ExcelTable] = {
+            "file-301": ExcelTable(
+                sheet_name="Sheet1",
+                headers=["A", "B", "C", "D", "E", "F", "G"],
+                rows=[["" for _ in range(7)] for _ in range(25)],
+                summary={"status": "Ready"}
+            )
+        }
+        self.presentations: Dict[str, PresentationContent] = {
+            "file-304": PresentationContent(
+                title="Presentation1.pptx",
+                author="User",
+                slides=[
+                    PowerPointSlide(
+                        slide_number=1,
+                        title="",
+                        subtitle="",
+                        bullets=[]
+                    )
+                ]
+            )
+        }
+        self.word_documents: Dict[str, DocumentContent] = {
+            "file-302": DocumentContent(
+                title="Document1.docx",
+                author="User",
+                raw_content="",
+                sections=[]
+            )
+        }
+        self.folders: Dict[str, List[EmailMessage]] = {
+            "inbox": self.emails,
+            "sent": [],
+            "drafts": [],
+            "archive": [],
+            "deleted": [],
+        }
+        self.onenote_notebooks: List[OneNoteNotebook] = [
+            OneNoteNotebook(
+                id="nb-01",
+                name="My Notebook",
+                sections=[
+                    OneNoteSection(
+                        id="sec-01",
+                        name="Quick Notes",
+                        color="#7719aa",
+                        pages=[
+                            OneNotePage(
+                                id="pg-01",
+                                title="Untitled page",
+                                created_at=now.strftime("%Y-%m-%d"),
+                                content=""
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+
+    def seed_demo_dataset(self, now: Optional[datetime] = None):
+        """Seeds benchmark demo data for test suites."""
+        if now is None:
+            now = datetime.now()
 
         # Seed Emails
         self.emails: List[EmailMessage] = [

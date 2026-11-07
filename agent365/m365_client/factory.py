@@ -38,7 +38,7 @@ def get_m365_client(force_mode: Optional[str] = None) -> M365ClientBase:
         )
         _current_mode = "live"
     else:
-        _current_client = MockM365Client()
+        _current_client = MockM365Client(fresh=settings.fresh_out_of_box)
         _current_mode = "mock"
 
     return _current_client

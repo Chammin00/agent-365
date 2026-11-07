@@ -172,6 +172,21 @@ async function loadHubData() {
     const files = await res.json();
     tbody.innerHTML = "";
 
+    if (!files || files.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="text-center py-5">
+            <div class="m365-empty-state">
+              <i class="bi bi-clock-history m365-empty-icon text-secondary"></i>
+              <div class="fw-semibold text-light mb-1">No recent files</div>
+              <small class="text-muted">Files you open or create in Microsoft 365 will appear here.</small>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
     files.slice(0, 6).forEach(f => {
       const tr = document.createElement("tr");
       let icon = "bi-file-earmark text-secondary";
@@ -230,11 +245,13 @@ function updateWordStats() {
   const sheets = container.querySelectorAll(".word-page-sheet");
   let totalText = "";
   sheets.forEach(sheet => {
-    totalText += " " + (sheet.innerText || "");
+    const txt = (sheet.innerText || "").trim();
+    sheet.setAttribute("data-empty", txt ? "false" : "true");
+    totalText += " " + txt;
   });
 
   const words = totalText.trim() ? totalText.trim().split(/\s+/).length : 0;
-  const chars = totalText.length;
+  const chars = totalText.trim().length;
 
   const wCount = document.getElementById("wordWordCount");
   const cCount = document.getElementById("wordCharCount");
@@ -247,15 +264,12 @@ function updateWordStats() {
 
 function createNewWordDocument() {
   const titleInput = document.getElementById("wordDocTitleInput");
-  if (titleInput) titleInput.value = "Untitled_Document.docx";
+  if (titleInput) titleInput.value = "Document1";
 
   const container = document.getElementById("wordPagesContainer");
   if (container) {
     container.innerHTML = `
-      <div class="word-page-sheet shadow-lg p-5 mb-4" id="wordDocumentCanvas" contenteditable="true" spellcheck="false" oninput="updateWordStats()">
-        <h1 class="fw-bold mb-3">Untitled Document</h1>
-        <p class="text-muted">Start typing your document text here...</p>
-      </div>
+      <div class="word-page-sheet shadow-lg p-5 mb-4" id="wordDocumentCanvas" contenteditable="true" spellcheck="false" oninput="updateWordStats()" data-empty="true" data-placeholder="Type / to insert content or start typing..."></div>
     `;
   }
   updateWordStats();
@@ -447,6 +461,8 @@ function renderExcelGrid(data) {
     headerRow.innerHTML = headerHtml;
   }
 
+  const isLetterHeaders = !data?.headers || data.headers.every((h, i) => h === String.fromCharCode(65 + i));
+
   for (let r = 1; r <= rowsCount; r++) {
     const tr = document.createElement("tr");
 
@@ -464,18 +480,17 @@ function renderExcelGrid(data) {
       td.dataset.coord = coord;
       td.contentEditable = "true";
 
-      // Populate cell if data exists
-      if (r === 1) {
-        // Headers row
+      // If headers are non-standard descriptive column titles (e.g. in test suites), put them on row 1
+      if (!isLetterHeaders && r === 1) {
         if (data && data.headers && data.headers[c]) {
           td.innerText = data.headers[c];
           td.classList.add("fw-bold", "text-info");
         }
       } else {
-        const dataRowIdx = r - 2;
+        const dataRowIdx = isLetterHeaders ? (r - 1) : (r - 2);
         if (data && data.rows && data.rows[dataRowIdx] && data.rows[dataRowIdx][c] !== undefined) {
           const val = data.rows[dataRowIdx][c];
-          td.innerText = val;
+          td.innerText = (val !== null && val !== undefined && val !== "") ? val : "";
           if (c === 3 && typeof val === "number") {
             td.className += val < 0 ? " text-success fw-bold" : " text-warning fw-bold";
           }
@@ -490,6 +505,12 @@ function renderExcelGrid(data) {
       tr.appendChild(td);
     }
     gridBody.appendChild(tr);
+  }
+
+  // Default focus cell A1
+  const cellA1 = gridBody.querySelector('.excel-data-cell[data-coord="A1"]');
+  if (cellA1) {
+    selectExcelCell(cellA1, "A1");
   }
 }
 
@@ -683,26 +704,22 @@ function createNewExcelWorkbook() {
     file_id: "file-new",
     name: "Book1.xlsx",
     sheet_name: "Sheet1",
-    headers: ["Account", "Description", "Q1", "Q2", "Q3", "Q4", "Total"],
-    rows: [
-      ["Revenue", "Enterprise Software", 1200, 1400, 1600, 1800, 6000],
-      ["COGS", "Cloud Hosting Infrastructure", 300, 320, 340, 360, 1320],
-      ["OPEX", "Research & Engineering", 450, 480, 510, 530, 1970],
-    ]
+    headers: ["A", "B", "C", "D", "E", "F", "G"],
+    rows: Array.from({ length: 25 }, () => ["", "", "", "", "", "", ""])
   };
   renderExcelGrid(excelData);
 }
 
 function exportExcelCsv() {
   if (!excelData) return;
-  let csv = excelData.headers.join(",") + "\n";
-  excelData.rows.forEach(r => {
+  let csv = (excelData.headers || []).join(",") + "\n";
+  (excelData.rows || []).forEach(r => {
     csv += r.join(",") + "\n";
   });
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "Q4_Financial_Projections.csv";
+  a.download = (excelData.name ? excelData.name.replace(".xlsx", ".csv") : "Book1.csv");
   a.click();
 }
 
@@ -743,7 +760,7 @@ function renderPowerPointThumbnails() {
     div.className = `ppt-thumb-card p-2 d-flex flex-column justify-content-between ${idx === activePptSlideIdx ? "active" : ""}`;
     div.onclick = () => displayPptSlide(idx);
     div.innerHTML = `
-      <div class="small fw-bold text-light text-truncate">${idx + 1}. ${escapeHtml(slide.title)}</div>
+      <div class="small fw-bold text-light text-truncate">${idx + 1}. ${escapeHtml(slide.title || "Untitled Slide")}</div>
       <small class="text-muted" style="font-size: 0.65rem;">Slide ${slide.slide_number || (idx + 1)}</small>
     `;
     list.appendChild(div);
@@ -764,7 +781,7 @@ function displayPptSlide(idx) {
   const subBox = document.getElementById("pptActiveSubtitle");
   const bulletsBox = document.getElementById("pptBulletsList");
 
-  if (titleBox) titleBox.value = slide.title;
+  if (titleBox) titleBox.value = slide.title || "";
   if (subBox) subBox.value = slide.subtitle || "";
   if (bulletsBox) {
     bulletsBox.innerHTML = (slide.bullets || []).map(b => `<div class="mb-2"><i class="bi bi-circle-fill text-danger me-2" style="font-size: 0.5rem;"></i>${escapeHtml(b)}</div>`).join("");
@@ -783,9 +800,9 @@ function addSlide() {
   const newNum = pptSlides.length + 1;
   pptSlides.push({
     slide_number: newNum,
-    title: `New Executive Milestone ${newNum}`,
-    subtitle: "Strategic Alignment & Targets",
-    bullets: ["Deliverable milestone verified", "Zero-Trust review completed"],
+    title: "",
+    subtitle: "",
+    bullets: [],
   });
   displayPptSlide(pptSlides.length - 1);
 }
@@ -886,9 +903,10 @@ async function loadMailData(folder = currentMailFolder) {
       const pane = document.getElementById("outlookReadingPane");
       if (pane) {
         pane.innerHTML = `
-          <div class="text-center py-5 text-muted">
-            <i class="bi bi-inbox fs-1 opacity-25"></i>
-            <p class="mt-2 small">Folder "${folder}" is empty.</p>
+          <div class="m365-empty-state py-5 text-center">
+            <i class="bi bi-envelope-open m365-empty-icon text-muted"></i>
+            <div class="fw-semibold text-light mb-1">Select an item to read</div>
+            <small class="text-muted">Nothing is selected</small>
           </div>
         `;
       }
@@ -910,10 +928,23 @@ function renderOutlookMessageList() {
 
   const unreadCount = activeMailList.filter(m => !m.is_read).length;
   const badge = document.getElementById("outlookUnreadBadge");
-  if (badge) badge.innerText = unreadCount;
+  if (badge) {
+    badge.innerText = unreadCount;
+    if (unreadCount === 0) {
+      badge.classList.add("d-none");
+    } else {
+      badge.classList.remove("d-none");
+    }
+  }
 
   if (list.length === 0) {
-    container.innerHTML = `<div class="text-center text-muted py-4 small">No messages to display.</div>`;
+    container.innerHTML = `
+      <div class="m365-empty-state py-5 text-center">
+        <i class="bi bi-inbox m365-empty-icon text-muted"></i>
+        <div class="fw-semibold text-light mb-1">Your inbox is all caught up</div>
+        <small class="text-muted">No messages in this folder.</small>
+      </div>
+    `;
     return;
   }
 
@@ -1110,7 +1141,16 @@ async function loadCalendarData() {
     container.innerHTML = "";
 
     if (calendarEvents.length === 0) {
-      container.innerHTML = `<div class="col-12 text-center text-muted py-5">No scheduled calendar events.</div>`;
+      container.innerHTML = `
+        <div class="m365-empty-state py-5 w-100 text-center">
+          <i class="bi bi-calendar3 m365-empty-icon text-danger"></i>
+          <h5 class="fw-semibold text-light mb-1">No events scheduled for today</h5>
+          <p class="text-muted small mb-3">Click '+ New event' to schedule your first meeting.</p>
+          <div>
+            <button class="btn btn-sm btn-danger rounded-pill px-3" onclick="openNewEventModal()"><i class="bi bi-plus-lg me-1"></i> New event</button>
+          </div>
+        </div>
+      `;
       return;
     }
 
@@ -1320,6 +1360,21 @@ async function loadFilesData() {
     const files = await res.json();
     tbody.innerHTML = "";
 
+    if (!files || files.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center py-5">
+            <div class="m365-empty-state">
+              <i class="bi bi-cloud-arrow-up m365-empty-icon text-info"></i>
+              <h5 class="fw-semibold text-light mb-1">This folder is empty</h5>
+              <p class="text-muted small mb-3">Drag files here or click '+ New' to create your first document.</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
     files.forEach(f => {
       const tr = document.createElement("tr");
       let icon = "bi-file-earmark";
@@ -1469,14 +1524,17 @@ function displayOneNotePage(page) {
   const dateDiv = document.getElementById("onenoteActiveDate");
   const editorDiv = document.getElementById("onenoteEditorContent");
 
-  if (titleInput) titleInput.value = page.title;
+  if (titleInput) {
+    titleInput.value = (page.title === "Untitled page" || !page.title) ? "" : page.title;
+    titleInput.placeholder = "Page Title";
+  }
   if (dateDiv) dateDiv.innerText = `${page.created_at || "Monday, November 2, 2026"} • Synced with Microsoft Cloud`;
-  if (editorDiv) editorDiv.innerHTML = page.content || "<p>Type note content here...</p>";
+  if (editorDiv) editorDiv.innerHTML = page.content || "";
 }
 
 async function createNewOneNotePagePrompt() {
   switchApp('onenote');
-  const title = prompt("Enter new OneNote page title:", "New Strategic Working Note");
+  const title = prompt("Enter new OneNote page title:", "Untitled page");
   if (!title) return;
 
   try {
@@ -1486,7 +1544,7 @@ async function createNewOneNotePagePrompt() {
       body: JSON.stringify({
         section_id: activeSectionId || "sec-01",
         title: title,
-        content: `<h3>${escapeHtml(title)}</h3><p>Draft notes and collaborate in real-time.</p>`
+        content: ""
       }),
     });
     const newPage = await res.json();

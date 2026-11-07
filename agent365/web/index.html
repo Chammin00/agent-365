@@ -8,8 +8,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <!-- Baseline High-Gloss Lacquer System & Custom Theme -->
-  <link rel="stylesheet" href="/static/css/high-gloss-lacquer.css">
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="static/css/high-gloss-lacquer.css">
+  <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body class="m365-app-root">
 
@@ -43,15 +43,21 @@
         <span class="m365-title fw-semibold text-light">Microsoft 365</span>
         <span class="badge m365-env-badge ms-1" id="activeAppBadge">Home</span>
       </div>
+
+      <!-- Windows 11 AutoSave Pill -->
+      <div class="m365-autosave-pill ms-3 d-none d-lg-flex" title="AutoSave is turned on for cloud documents">
+        <span class="m365-autosave-dot"></span>
+        <span>AutoSave</span>
+      </div>
     </div>
 
-    <!-- Center: Global Search Bar -->
+    <!-- Center: Global Search Bar (Mimicking Windows 11 Office Alt+Q) -->
     <div class="m365-search-container flex-grow-1 mx-4 d-none d-md-block" style="max-width: 640px;">
       <div class="input-group m365-search-group">
         <span class="input-group-text bg-transparent border-0 text-muted ps-3">
           <i class="bi bi-search"></i>
         </span>
-        <input type="text" id="globalSearchInput" class="form-control bg-transparent border-0 text-light m365-search-input" placeholder="Search across files, emails, people, chats, and calendar..." onkeydown="handleGlobalSearch(event)">
+        <input type="text" id="globalSearchInput" class="form-control bg-transparent border-0 text-light m365-search-input" placeholder="Search (Alt + Q)" onkeydown="handleGlobalSearch(event)">
       </div>
     </div>
 
@@ -78,8 +84,8 @@
       </button>
 
       <!-- User Profile Initials -->
-      <div class="m365-user-avatar" title="Sarah Jenkins (CEO) — Enterprise 365 Tenant">
-        <span>SJ</span>
+      <div class="m365-user-avatar" title="Microsoft 365 Account">
+        <span>C</span>
       </div>
     </div>
   </header>
@@ -220,23 +226,23 @@
     <main class="m365-content-area flex-grow-1 overflow-auto p-0" id="mainContentArea">
 
       <!-- =========================================================================
-           VIEW 1: MICROSOFT 365 HOME / HUB
+           VIEW 1: MICROSOFT 365 HOME / HUB (FRESH OUT OF THE BOX)
            ========================================================================= -->
       <section class="app-view p-4 active" id="view-hub">
         <!-- Hero Welcome -->
         <div class="card glass-card mb-4 border-0 p-4">
           <div class="row align-items-center">
             <div class="col-md-8">
-              <span class="badge bg-primary-subtle text-primary border border-primary-subtle mb-2">Enterprise 365 Environment</span>
-              <h2 class="h3 fw-bold text-light mb-2">Good afternoon, Sarah</h2>
-              <p class="text-muted mb-3">Welcome to your unified Microsoft 365 suite. 5 specialized agents are active and governing your email, calendar, files, and spreadsheets.</p>
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle mb-2">Microsoft 365 Enterprise</span>
+              <h2 class="h3 fw-bold text-light mb-2">Good afternoon</h2>
+              <p class="text-muted mb-3">Welcome to Microsoft 365. Create, collaborate, and manage your cloud workspace.</p>
               <div class="d-flex flex-wrap gap-2">
-                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('word'); createNewWordDocument();"><i class="bi bi-file-earmark-plus text-primary me-1"></i> New Document</button>
-                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('excel'); createNewExcelWorkbook();"><i class="bi bi-table text-success me-1"></i> New Workbook</button>
-                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('powerpoint'); addSlide();"><i class="bi bi-file-earmark-slides text-danger me-1"></i> New Presentation</button>
-                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('onenote'); createNewOneNotePagePrompt();"><i class="bi bi-journal-plus text-purple me-1"></i> New Note Page</button>
-                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('outlook'); openOutlookComposer();"><i class="bi bi-envelope-plus text-info me-1"></i> New Email</button>
-                <button class="btn btn-sm btn-primary rounded-pill" onclick="switchApp('copilot')"><i class="bi bi-stars me-1"></i> Launch Chief of Staff</button>
+                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('word'); createNewWordDocument();"><i class="bi bi-file-earmark-plus text-primary me-1"></i> Blank Document</button>
+                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('excel'); createNewExcelWorkbook();"><i class="bi bi-table text-success me-1"></i> Blank Workbook</button>
+                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('powerpoint'); addSlide();"><i class="bi bi-file-earmark-slides text-danger me-1"></i> Blank Presentation</button>
+                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('onenote'); createNewOneNotePagePrompt();"><i class="bi bi-journal-plus text-purple me-1"></i> Blank Notebook</button>
+                <button class="btn btn-sm btn-action rounded-pill" onclick="switchApp('outlook'); openOutlookComposer();"><i class="bi bi-envelope-plus text-info me-1"></i> New Message</button>
+                <button class="btn btn-sm btn-primary rounded-pill" onclick="switchApp('copilot')"><i class="bi bi-stars me-1"></i> Launch Copilot</button>
               </div>
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
@@ -244,10 +250,10 @@
                 <div class="small text-muted mb-1">Cloud Storage Usage</div>
                 <div class="d-flex justify-content-between small fw-bold mb-1">
                   <span>OneDrive Business</span>
-                  <span class="text-info">4.2 GB / 1 TB</span>
+                  <span class="text-info" id="hubStorageUsageText">0.0 GB / 1 TB</span>
                 </div>
                 <div class="progress bg-dark" style="height: 6px;">
-                  <div class="progress-bar bg-info" style="width: 8%;"></div>
+                  <div class="progress-bar bg-info" id="hubStorageBar" style="width: 0%;"></div>
                 </div>
                 <div class="small text-success mt-2"><i class="bi bi-shield-check me-1"></i> Entra ID Zero-Trust: Compliant</div>
               </div>
@@ -255,74 +261,66 @@
           </div>
         </div>
 
-        <!-- Quick Access App Cards -->
+        <!-- Quick Create Ribbon Cards -->
         <div class="row g-3 mb-4">
           <div class="col-sm-6 col-lg-3">
-            <div class="card glass-card p-3 h-100 cursor-pointer" onclick="switchApp('word')">
+            <div class="card glass-card p-3 h-100 cursor-pointer" onclick="switchApp('word'); createNewWordDocument();">
               <div class="d-flex align-items-center gap-3">
                 <div class="app-icon-box bg-word"><i class="bi bi-file-earmark-word text-white fs-4"></i></div>
                 <div>
-                  <h6 class="mb-0 fw-bold text-light">Word</h6>
-                  <small class="text-muted">Draft & collaborate on docs</small>
+                  <h6 class="mb-0 fw-bold text-light">Blank document</h6>
+                  <small class="text-muted">Word for Web</small>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-sm-6 col-lg-3">
-            <div class="card glass-card p-3 h-100 cursor-pointer" onclick="switchApp('excel')">
+            <div class="card glass-card p-3 h-100 cursor-pointer" onclick="switchApp('excel'); createNewExcelWorkbook();">
               <div class="d-flex align-items-center gap-3">
                 <div class="app-icon-box bg-excel"><i class="bi bi-file-earmark-spreadsheet text-white fs-4"></i></div>
                 <div>
-                  <h6 class="mb-0 fw-bold text-light">Excel</h6>
-                  <small class="text-muted">Formulas & variance analysis</small>
+                  <h6 class="mb-0 fw-bold text-light">Blank workbook</h6>
+                  <small class="text-muted">Excel for Web</small>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-sm-6 col-lg-3">
-            <div class="card glass-card p-3 h-100 cursor-pointer" onclick="switchApp('powerpoint')">
+            <div class="card glass-card p-3 h-100 cursor-pointer" onclick="switchApp('powerpoint'); addSlide();">
               <div class="d-flex align-items-center gap-3">
                 <div class="app-icon-box bg-powerpoint"><i class="bi bi-file-earmark-slides text-white fs-4"></i></div>
                 <div>
-                  <h6 class="mb-0 fw-bold text-light">PowerPoint</h6>
-                  <small class="text-muted">Executive board decks</small>
+                  <h6 class="mb-0 fw-bold text-light">Blank presentation</h6>
+                  <small class="text-muted">PowerPoint for Web</small>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-sm-6 col-lg-3">
-            <div class="card glass-card p-3 h-100 cursor-pointer" onclick="switchApp('onenote')">
+            <div class="card glass-card p-3 h-100 cursor-pointer" onclick="switchApp('onenote'); createNewOneNotePagePrompt();">
               <div class="app-icon-box bg-onenote"><i class="bi bi-journal-text text-white fs-4"></i></div>
               <div>
-                <h6 class="mb-0 fw-bold text-light">OneNote</h6>
-                <small class="text-muted">Sections & multi-page notes</small>
+                <h6 class="mb-0 fw-bold text-light">Blank notebook</h6>
+                <small class="text-muted">OneNote for Web</small>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Recent Cloud Files -->
+        <!-- Recent Cloud Files (Out of the box clean state) -->
         <div class="card glass-card shadow-sm border-0">
           <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-            <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i>Recent Documents & Files</h6>
+            <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i>Recent Documents</h6>
             <button class="btn btn-sm btn-outline-secondary" onclick="loadFilesData()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh</button>
           </div>
-          <div class="card-body p-0">
-            <div class="table-responsive">
-              <table class="table table-hover align-middle mb-0 text-light custom-table">
-                <thead class="table-dark">
-                  <tr>
-                    <th>Name</th>
-                    <th>Application</th>
-                    <th>Last Modified</th>
-                    <th>Sharing</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody id="hubRecentFilesBody">
-                  <tr><td colspan="5" class="text-center py-4 text-muted">Loading recent files...</td></tr>
-                </tbody>
-              </table>
+          <div class="card-body p-0" id="hubRecentFilesContainer">
+            <div class="m365-empty-state py-5">
+              <i class="bi bi-clock-history m365-empty-icon text-secondary"></i>
+              <h5 class="fw-semibold text-light mb-1">No recent documents</h5>
+              <p class="text-muted small mb-3">Documents you create or edit in Word, Excel, PowerPoint, or OneNote will appear here.</p>
+              <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="switchApp('word'); createNewWordDocument();">
+                <i class="bi bi-plus-lg me-1"></i> Create a document
+              </button>
             </div>
           </div>
         </div>
@@ -337,8 +335,8 @@
           <div class="d-flex align-items-center gap-3">
             <div class="app-icon-box bg-word sm"><i class="bi bi-file-earmark-word text-white"></i></div>
             <div>
-              <input type="text" id="wordDocTitleInput" class="form-control form-control-sm bg-transparent border-0 text-light fw-bold p-0" value="Executive_Strategic_Plan_2026.docx" style="font-size: 1.05rem; width: 340px;">
-              <small class="text-muted"><i class="bi bi-cloud-check text-success me-1"></i>Saved to OneDrive &bull; Version 4.2</small>
+              <input type="text" id="wordDocTitleInput" class="form-control form-control-sm bg-transparent border-0 text-light fw-bold p-0" value="Document1" style="font-size: 1.05rem; width: 340px;">
+              <small class="text-muted"><i class="bi bi-cloud-check text-success me-1"></i>Saved to OneDrive &bull; Version 1.0</small>
             </div>
           </div>
           <div class="d-flex align-items-center gap-2">
@@ -375,11 +373,12 @@
                 <option value="Times New Roman">Times New Roman</option>
               </select>
               <select class="form-select form-select-sm bg-dark text-light border-secondary" style="width: 70px;" onchange="execWordCmd('fontSize', this.value)">
-                <option value="3">12pt</option>
+                <option value="3">11pt</option>
                 <option value="2">10pt</option>
-                <option value="4">14pt</option>
-                <option value="5">18pt</option>
-                <option value="6">24pt</option>
+                <option value="4">12pt</option>
+                <option value="5">14pt</option>
+                <option value="6">18pt</option>
+                <option value="7">24pt</option>
               </select>
               <div class="btn-group btn-group-sm">
                 <button class="btn btn-dark fw-bold" onclick="execWordCmd('bold')" title="Bold">B</button>
@@ -398,8 +397,8 @@
               <div class="vr bg-secondary"></div>
               <div class="btn-group btn-group-sm">
                 <button class="btn btn-dark" onclick="execWordCmd('formatBlock', '<h1>')">Title</button>
-                <button class="btn btn-dark" onclick="execWordCmd('formatBlock', '<h2>')">H1</button>
-                <button class="btn btn-dark" onclick="execWordCmd('formatBlock', '<h3>')">H2</button>
+                <button class="btn btn-dark" onclick="execWordCmd('formatBlock', '<h2>')">Heading 1</button>
+                <button class="btn btn-dark" onclick="execWordCmd('formatBlock', '<h3>')">Heading 2</button>
                 <button class="btn btn-dark" onclick="execWordCmd('formatBlock', '<p>')">Normal</button>
               </div>
             </div>
@@ -408,10 +407,10 @@
           <!-- Sub-Ribbon 2: Insert -->
           <div class="ribbon-subpanel d-none" id="wordRibbon-insert">
             <div class="ribbon-toolbar d-flex align-items-center gap-2 py-1 flex-wrap">
-              <button class="btn btn-sm btn-dark" onclick="insertWordPage()"><i class="bi bi-file-earmark-plus text-primary me-1"></i> Add New Page</button>
-              <button class="btn btn-sm btn-dark" onclick="insertWordTable()"><i class="bi bi-table text-success me-1"></i> Insert Table (3x3)</button>
-              <button class="btn btn-sm btn-dark" onclick="insertWordLink()"><i class="bi bi-link-45deg text-info me-1"></i> Insert Link</button>
-              <button class="btn btn-sm btn-dark" onclick="insertWordHorizontalRule()"><i class="bi bi-hr me-1"></i> Page Divider</button>
+              <button class="btn btn-sm btn-dark" onclick="insertWordPage()"><i class="bi bi-file-earmark-plus text-primary me-1"></i> Blank Page</button>
+              <button class="btn btn-sm btn-dark" onclick="insertWordTable()"><i class="bi bi-table text-success me-1"></i> Table</button>
+              <button class="btn btn-sm btn-dark" onclick="insertWordLink()"><i class="bi bi-link-45deg text-info me-1"></i> Link</button>
+              <button class="btn btn-sm btn-dark" onclick="insertWordHorizontalRule()"><i class="bi bi-hr me-1"></i> Horizontal Line</button>
             </div>
           </div>
 
@@ -447,30 +446,18 @@
           </div>
         </div>
 
-        <!-- Word Document Multi-Page Stage -->
+        <!-- Word Document Multi-Page Stage (Fresh blank sheet, no examples) -->
         <div class="m365-document-stage flex-grow-1 overflow-auto p-4 d-flex flex-column align-items-center" id="wordPagesContainer">
-          <!-- Page 1 Container -->
-          <div class="word-page-sheet shadow-lg p-5 mb-4" id="wordDocumentCanvas" contenteditable="true" spellcheck="false" oninput="updateWordStats()">
-            <h1 class="fw-bold mb-3">Executive Strategic Plan 2026</h1>
-            <h2 class="h5 fw-bold text-primary mb-2">1. Vision & Core Mission</h2>
-            <p>Enterprise 365 leads the market in autonomous enterprise workflow transformation. In FY26, our primary objective is unifying cloud data pipelines with specialized AI agents across Microsoft 365.</p>
-            <h2 class="h5 fw-bold text-primary mb-2">2. Key Priorities</h2>
-            <ul>
-              <li>Secure Entra ID Zero-Trust architecture across all cloud endpoints.</li>
-              <li>Automate routine financial variance calculations and calendar de-confliction.</li>
-              <li>Modernize collaboration channels in Microsoft Teams with real-time telemetry.</li>
-            </ul>
-            <h2 class="h5 fw-bold text-primary mb-2">3. Governance & Risk Management</h2>
-            <p>All autonomous operations adhere strictly to SOC 2 Type II compliance, Purview audit logging, and role-based access control (RBAC).</p>
-          </div>
+          <!-- Page 1 Container (Pristine empty out of the box) -->
+          <div class="word-page-sheet shadow-lg p-5 mb-4" id="wordDocumentCanvas" contenteditable="true" spellcheck="false" oninput="updateWordStats()" data-empty="true" data-placeholder="Type / to insert content or start typing..."></div>
         </div>
 
         <!-- Word Status Bar -->
         <div class="m365-office-statusbar px-3 py-1 border-top d-flex justify-content-between align-items-center small text-muted">
           <div class="d-flex align-items-center gap-3">
             <span id="wordPageIndicator">Page 1 of 1</span>
-            <span id="wordWordCount">78 words</span>
-            <span id="wordCharCount">592 characters</span>
+            <span id="wordWordCount">0 words</span>
+            <span id="wordCharCount">0 characters</span>
             <span>English (United States)</span>
           </div>
           <div class="d-flex align-items-center gap-2">
@@ -489,8 +476,8 @@
           <div class="d-flex align-items-center gap-3">
             <div class="app-icon-box bg-excel sm"><i class="bi bi-file-earmark-spreadsheet text-white"></i></div>
             <div>
-              <span class="text-light fw-bold" style="font-size: 1.05rem;">Q4_Financial_Projections.xlsx</span>
-              <small class="text-muted d-block"><i class="bi bi-cloud-check text-success me-1"></i>Saved to OneDrive &bull; Sheet: <span id="excelCurrentSheetBadge">Q4_Summary</span></small>
+              <span class="text-light fw-bold" style="font-size: 1.05rem;">Book1</span>
+              <small class="text-muted d-block"><i class="bi bi-cloud-check text-success me-1"></i>Saved to OneDrive &bull; Sheet: <span id="excelCurrentSheetBadge">Sheet1</span></small>
             </div>
           </div>
           <div class="d-flex align-items-center gap-2">
@@ -533,7 +520,7 @@
           <div class="ribbon-subpanel d-none" id="excelRibbon-insert">
             <div class="ribbon-toolbar d-flex align-items-center gap-2 py-1 flex-wrap">
               <button class="btn btn-sm btn-dark" onclick="insertExcelSummaryRow()"><i class="bi bi-table text-success me-1"></i> Insert Total Row</button>
-              <button class="btn btn-sm btn-dark" onclick="alert('Bar chart generated from Column C (Actuals vs Budgets).')"><i class="bi bi-bar-chart-line text-info me-1"></i> Insert Chart</button>
+              <button class="btn btn-sm btn-dark" onclick="alert('Select a cell range with numeric data to generate chart.')"><i class="bi bi-bar-chart-line text-info me-1"></i> Insert Chart</button>
             </div>
           </div>
 
@@ -548,17 +535,17 @@
 
           <div class="ribbon-subpanel d-none" id="excelRibbon-data">
             <div class="ribbon-toolbar d-flex align-items-center gap-2 py-1 flex-wrap">
-              <button class="btn btn-sm btn-dark" onclick="sortExcelData(1, 'asc')"><i class="bi bi-sort-numeric-down me-1"></i> Sort Budget Low-High</button>
-              <button class="btn btn-sm btn-dark" onclick="sortExcelData(1, 'desc')"><i class="bi bi-sort-numeric-up-alt me-1"></i> Sort Budget High-Low</button>
+              <button class="btn btn-sm btn-dark" onclick="sortExcelData(0, 'asc')"><i class="bi bi-sort-alpha-down me-1"></i> Sort Column A-Z</button>
+              <button class="btn btn-sm btn-dark" onclick="sortExcelData(0, 'desc')"><i class="bi bi-sort-alpha-up me-1"></i> Sort Column Z-A</button>
             </div>
           </div>
         </div>
 
         <!-- Excel Formula Bar -->
         <div class="excel-formula-bar px-3 py-1 border-bottom d-flex align-items-center gap-2 bg-surface-dark">
-          <div class="name-box bg-dark border text-center text-info small fw-bold px-2 py-1 rounded" id="excelNameBox" style="min-width: 50px;">B2</div>
+          <div class="name-box bg-dark border text-center text-info small fw-bold px-2 py-1 rounded" id="excelNameBox" style="min-width: 50px;">A1</div>
           <span class="text-muted fw-bold fst-italic">fx</span>
-          <input type="text" id="excelFormulaInput" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Enter cell value or formula (e.g. =SUM(B2:B6))" onkeydown="handleFormulaEnter(event)">
+          <input type="text" id="excelFormulaInput" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Enter cell value or formula (e.g. =SUM(A1:A10))" onkeydown="handleFormulaEnter(event)">
         </div>
 
         <!-- Excel Interactive Spreadsheet Grid -->
@@ -585,8 +572,7 @@
         <!-- Excel Sheet Tabs & Status Bar -->
         <div class="m365-office-statusbar px-3 py-1 border-top d-flex justify-content-between align-items-center small text-muted">
           <div class="d-flex align-items-center gap-2" id="excelSheetTabsList">
-            <button class="btn btn-sm btn-dark py-0 px-2 fw-semibold active border-top-0 rounded-bottom" onclick="switchExcelSheet('Q4_Summary', this)">Q4_Summary</button>
-            <button class="btn btn-sm btn-outline-dark py-0 px-2 text-muted" onclick="switchExcelSheet('Department_Budgets', this)">Department_Budgets</button>
+            <button class="btn btn-sm btn-dark py-0 px-2 fw-semibold active border-top-0 rounded-bottom" onclick="switchExcelSheet('Sheet1', this)">Sheet1</button>
             <button class="btn btn-sm btn-icon text-muted py-0" onclick="addNewExcelSheetTab()" title="New sheet"><i class="bi bi-plus"></i></button>
           </div>
           <div class="d-flex align-items-center gap-3">
@@ -604,8 +590,8 @@
           <div class="d-flex align-items-center gap-3">
             <div class="app-icon-box bg-powerpoint sm"><i class="bi bi-file-earmark-slides text-white"></i></div>
             <div>
-              <span class="text-light fw-bold" style="font-size: 1.05rem;">Enterprise_365_Strategy.pptx</span>
-              <small class="text-muted d-block"><i class="bi bi-cloud-check text-success me-1"></i>Saved to OneDrive &bull; <span id="pptSlideCountBadge">3 Slides</span></small>
+              <span class="text-light fw-bold" style="font-size: 1.05rem;">Presentation1</span>
+              <small class="text-muted d-block"><i class="bi bi-cloud-check text-success me-1"></i>Saved to OneDrive &bull; <span id="pptSlideCountBadge">1 Slide</span></small>
             </div>
           </div>
           <div class="d-flex align-items-center gap-2">
@@ -661,11 +647,15 @@
             <!-- Populated via JS -->
           </div>
 
-          <!-- Active Slide Canvas -->
+          <!-- Active Slide Canvas (Fresh OOTB: Click to add title/subtitle dashed boxes) -->
           <div class="ppt-canvas-stage flex-grow-1 p-4 d-flex flex-column align-items-center justify-content-center bg-dark">
             <div class="ppt-slide-canvas shadow-lg p-5 rounded" id="activeSlideCanvas">
-              <input type="text" id="pptActiveTitle" class="ppt-title-box w-100 fw-bold border-0 bg-transparent text-light mb-3" value="Enterprise 365 — Q4 Strategic Outlook" oninput="saveCurrentSlideText()">
-              <input type="text" id="pptActiveSubtitle" class="ppt-subtitle-box w-100 border-0 bg-transparent text-info mb-4" value="Accelerating Cloud Modernization & Autonomous Agentic Operations" oninput="saveCurrentSlideText()">
+              <div class="ppt-title-placeholder-box mb-3">
+                <input type="text" id="pptActiveTitle" class="ppt-title-box w-100 fw-bold border-0 bg-transparent text-light" placeholder="Click to add title" value="" oninput="saveCurrentSlideText()">
+              </div>
+              <div class="ppt-subtitle-placeholder-box mb-4">
+                <input type="text" id="pptActiveSubtitle" class="ppt-subtitle-box w-100 border-0 bg-transparent text-secondary" placeholder="Click to add subtitle" value="" oninput="saveCurrentSlideText()">
+              </div>
               <div id="pptBulletsList" class="ppt-bullets-area text-light">
                 <!-- Bullets -->
               </div>
@@ -721,7 +711,7 @@
           <div class="outlook-folder-pane border-end p-2" style="width: 200px; min-width: 200px;">
             <div class="small fw-bold text-uppercase text-muted px-2 py-1">Favorites</div>
             <div class="outlook-folder-item active" onclick="filterMailFolder('inbox', this)">
-              <i class="bi bi-inbox me-2"></i> Inbox <span class="badge bg-primary float-end" id="outlookUnreadBadge">2</span>
+              <i class="bi bi-inbox me-2"></i> Inbox <span class="badge bg-primary float-end d-none" id="outlookUnreadBadge">0</span>
             </div>
             <div class="outlook-folder-item" onclick="filterMailFolder('sent', this)">
               <i class="bi bi-send me-2"></i> Sent Items
@@ -745,15 +735,20 @@
               <button class="btn btn-sm btn-dark flex-grow-1" id="mailFilterUnreadBtn" onclick="toggleMailFilter('unread')">Unread</button>
             </div>
             <div class="overflow-auto flex-grow-1 p-2" id="outlookMessageListContainer">
-              <!-- Message Cards -->
+              <div class="m365-empty-state py-5 text-center">
+                <i class="bi bi-inbox m365-empty-icon text-muted"></i>
+                <div class="fw-semibold text-light mb-1">Your inbox is all caught up</div>
+                <small class="text-muted">No messages in this folder.</small>
+              </div>
             </div>
           </div>
 
           <!-- Pane 3: Reading Pane & Composer -->
           <div class="outlook-reading-pane flex-grow-1 p-4 overflow-auto bg-surface-dark" id="outlookReadingPane">
-            <div class="text-center py-5 text-muted">
-              <i class="bi bi-envelope-open fs-1 opacity-25"></i>
-              <p class="mt-2 small">Select an email from the list to preview.</p>
+            <div class="m365-empty-state py-5 text-center">
+              <i class="bi bi-envelope-open m365-empty-icon text-muted"></i>
+              <div class="fw-semibold text-light mb-1">Select an item to read</div>
+              <small class="text-muted">Nothing is selected</small>
             </div>
           </div>
         </div>
@@ -768,7 +763,14 @@
             </div>
           </div>
           <div class="row g-3" id="calendarEventCards">
-            <!-- Populated via JS -->
+            <div class="m365-empty-state py-5 w-100 text-center">
+              <i class="bi bi-calendar3 m365-empty-icon text-danger"></i>
+              <h5 class="fw-semibold text-light mb-1">No events scheduled for today</h5>
+              <p class="text-muted small mb-3">Click '+ New event' to schedule your first meeting.</p>
+              <div>
+                <button class="btn btn-sm btn-danger rounded-pill px-3" onclick="openNewEventModal()"><i class="bi bi-plus-lg me-1"></i> New event</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -780,11 +782,11 @@
         <!-- Teams Top Bar -->
         <div class="m365-office-header px-3 py-2 d-flex align-items-center justify-content-between border-bottom">
           <div class="d-flex align-items-center gap-2">
-            <span class="fw-bold text-light" id="activeTeamsChannelHeader"><i class="bi bi-hash text-purple me-1"></i> General &bull; Enterprise 365</span>
+            <span class="fw-bold text-light" id="activeTeamsChannelHeader"><i class="bi bi-hash text-purple me-1"></i> General &bull; Team Workspace</span>
           </div>
           <div class="d-flex align-items-center gap-2">
             <button class="btn btn-sm btn-outline-secondary" onclick="promptNewChannel()"><i class="bi bi-plus-lg me-1"></i> Add Channel</button>
-            <span class="small text-muted"><i class="bi bi-people me-1"></i> 48 Members</span>
+            <span class="small text-muted"><i class="bi bi-people me-1"></i> 1 Member</span>
           </div>
         </div>
 
@@ -801,7 +803,11 @@
           <!-- Discussion Stream & Composer -->
           <div class="teams-chat-pane flex-grow-1 d-flex flex-column bg-surface-dark">
             <div class="teams-messages-stream flex-grow-1 overflow-auto p-3" id="teamsMessagesStream">
-              <!-- Thread Messages -->
+              <div class="m365-empty-state py-5 text-center">
+                <i class="bi bi-chat-dots m365-empty-icon text-purple"></i>
+                <h5 class="fw-semibold text-light mb-1">Welcome to General</h5>
+                <p class="text-muted small">This is the start of the General channel. Use this space to collaborate, post announcements, and chat with your team.</p>
+              </div>
             </div>
             <!-- Teams Composer -->
             <div class="teams-composer-box p-3 border-top bg-surface-subtle">
@@ -866,7 +872,15 @@
                 </tr>
               </thead>
               <tbody id="onedriveExplorerBody">
-                <!-- Populated via JS -->
+                <tr>
+                  <td colspan="6" class="text-center py-5">
+                    <div class="m365-empty-state">
+                      <i class="bi bi-cloud-arrow-up m365-empty-icon text-info"></i>
+                      <h5 class="fw-semibold text-light mb-1">This folder is empty</h5>
+                      <p class="text-muted small mb-3">Drag files here or click '+ New' to create your first document.</p>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -882,7 +896,7 @@
           <div class="d-flex align-items-center gap-3">
             <div class="app-icon-box bg-onenote sm"><i class="bi bi-journal-text text-white"></i></div>
             <div>
-              <span class="text-light fw-bold" style="font-size: 1.05rem;">Executive Strategy Notebook</span>
+              <span class="text-light fw-bold" style="font-size: 1.05rem;">My Notebook</span>
               <small class="text-muted d-block"><i class="bi bi-cloud-check text-success me-1"></i>Notebook synced with OneDrive</small>
             </div>
           </div>
@@ -916,16 +930,11 @@
             </div>
           </div>
 
-          <!-- Column 3: Active Note Canvas -->
+          <!-- Column 3: Active Note Canvas (Fresh blank note) -->
           <div class="onenote-canvas-pane flex-grow-1 p-5 overflow-auto bg-surface-dark" id="onenoteActiveCanvas">
-            <input type="text" id="onenoteActivePageTitle" class="form-control form-control-lg bg-transparent border-0 text-light fw-bold p-0 mb-2" value="FY26 Strategic OKRs" oninput="saveActiveOneNoteContent()">
-            <div class="text-muted small mb-4" id="onenoteActiveDate">Monday, November 2, 2026 &bull; 4:45 PM</div>
-            <div class="onenote-page-editor text-light" id="onenoteEditorContent" contenteditable="true" spellcheck="false" oninput="saveActiveOneNoteContent()">
-              <h3>FY26 Strategic OKRs</h3>
-              <p><strong>Objective 1:</strong> Scale autonomous agent pipelines across all M365 tenants.</p>
-              <p><strong>Key Result 1.1:</strong> Reduce administrative triage latency to &lt; 5 minutes.</p>
-              <p><strong>Key Result 1.2:</strong> Maintain 100% Zero-Trust Entra ID compliance score.</p>
-            </div>
+            <input type="text" id="onenoteActivePageTitle" class="form-control form-control-lg bg-transparent border-0 text-light fw-bold p-0 mb-2" value="" placeholder="Page Title" oninput="saveActiveOneNoteContent()">
+            <div class="text-muted small mb-4" id="onenoteActiveDate">Monday, November 2, 2026 &bull; Synced with Microsoft Cloud</div>
+            <div class="onenote-page-editor text-light" id="onenoteEditorContent" contenteditable="true" spellcheck="false" oninput="saveActiveOneNoteContent()"></div>
           </div>
         </div>
       </section>
@@ -949,21 +958,21 @@
                 <button class="btn btn-sm btn-outline-secondary" onclick="clearChat()"><i class="bi bi-trash3"></i></button>
               </div>
 
-              <!-- Quick Action Pills -->
+              <!-- Quick Action Pills (Fresh Productivity Starters) -->
               <div class="p-3 bg-surface-subtle border-bottom">
-                <div class="small fw-semibold text-secondary mb-2">Executive Actions:</div>
+                <div class="small fw-semibold text-secondary mb-2">Suggested Actions:</div>
                 <div class="d-flex flex-wrap gap-2">
-                  <button class="btn btn-sm btn-action rounded-pill" onclick="sendPrompt('Provide my executive morning briefing: check urgent emails, check for conflicts with my 2 PM budget review, find the Q4 financial spreadsheet on OneDrive, and notify the executive channel on Teams.')">
-                    <i class="bi bi-sun text-warning me-1"></i> Executive Morning Briefing
+                  <button class="btn btn-sm btn-action rounded-pill" onclick="sendPrompt('Draft a project proposal document in Word.')">
+                    <i class="bi bi-file-earmark-word text-primary me-1"></i> Draft in Word
                   </button>
-                  <button class="btn btn-sm btn-action rounded-pill" onclick="sendPrompt('Check calendar conflicts for 2:00 PM today and suggest alternative times.')">
-                    <i class="bi bi-calendar-x text-danger me-1"></i> Check 2 PM Conflicts
+                  <button class="btn btn-sm btn-action rounded-pill" onclick="sendPrompt('Create a budget tracker spreadsheet in Excel.')">
+                    <i class="bi bi-file-earmark-spreadsheet text-success me-1"></i> Create Excel Spreadsheet
                   </button>
-                  <button class="btn btn-sm btn-action rounded-pill" onclick="sendPrompt('Analyze the Q4 Financial Projections spreadsheet on OneDrive and report department variances.')">
-                    <i class="bi bi-table text-success me-1"></i> Analyze Q4 Financials
+                  <button class="btn btn-sm btn-action rounded-pill" onclick="sendPrompt('Schedule a team sync meeting on my calendar.')">
+                    <i class="bi bi-calendar-plus text-danger me-1"></i> Schedule Team Sync
                   </button>
-                  <button class="btn btn-sm btn-action rounded-pill" onclick="sendPrompt('Triage my unread Outlook emails and draft a reply acknowledging the CEO revenue targets.')">
-                    <i class="bi bi-envelope-check text-info me-1"></i> Triage & Reply
+                  <button class="btn btn-sm btn-action rounded-pill" onclick="sendPrompt('Draft an update email to send via Outlook.')">
+                    <i class="bi bi-envelope text-info me-1"></i> Compose Outlook Email
                   </button>
                 </div>
               </div>
@@ -1044,7 +1053,7 @@
         <div class="modal-body">
           <div class="mb-2">
             <label class="small text-muted">Title:</label>
-            <input type="text" id="newEventTitle" class="form-control bg-dark text-light border-secondary" placeholder="Meeting title" value="Q4 Strategy Working Session">
+            <input type="text" id="newEventTitle" class="form-control bg-dark text-light border-secondary" placeholder="Meeting title" value="">
           </div>
           <div class="row g-2 mb-2">
             <div class="col-6">
@@ -1058,7 +1067,7 @@
           </div>
           <div class="mb-2">
             <label class="small text-muted">Attendees (comma separated):</label>
-            <input type="text" id="newEventAttendees" class="form-control bg-dark text-light border-secondary" value="marcus.chen@enterprise365.com">
+            <input type="text" id="newEventAttendees" class="form-control bg-dark text-light border-secondary" placeholder="colleague@company.com" value="">
           </div>
         </div>
         <div class="modal-footer border-top">
@@ -1113,8 +1122,8 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Baseline High-Gloss Lacquer Dynamic Engine -->
-  <script src="/static/js/high-gloss-lacquer.js"></script>
+  <script src="static/js/high-gloss-lacquer.js"></script>
   <!-- Main Application Controller -->
-  <script src="/static/js/app.js"></script>
+  <script src="static/js/app.js"></script>
 </body>
 </html>
